@@ -840,14 +840,14 @@ class FaceReconModel(BaseModel):
             #     # video_save_path = os.path.join(out_dir, save_name + '_{}_rotate_gray.mp4'.format(i))
             #     # write_video(pred_face_gray_list, video_save_path, fps=30)
 
-            pred_face_color_list = []
-            if 'pred_face_high_color_list' in self.extra_results:
-                for j in range(len(self.extra_results['pred_face_high_color_list'])):
-                    pred_face_high_color_j = self.extra_results['pred_face_high_color_list'][j][i, ...]
-                    pred_face_high_color_j = 255. * pred_face_high_color_j.detach().cpu().permute(1, 2, 0).numpy()[..., ::-1]
-                    pred_face_color_list.append(pred_face_high_color_j.clip(0, 255).astype(np.uint8))
-                video_save_path = os.path.join(out_dir, save_name + '_{}_rotate_color.mp4'.format(i))
-                write_video(pred_face_color_list, video_save_path, fps=30)
+            # pred_face_color_list = []
+            # if 'pred_face_high_color_list' in self.extra_results:
+            #     for j in range(len(self.extra_results['pred_face_high_color_list'])):
+            #         pred_face_high_color_j = self.extra_results['pred_face_high_color_list'][j][i, ...]
+            #         pred_face_high_color_j = 255. * pred_face_high_color_j.detach().cpu().permute(1, 2, 0).numpy()[..., ::-1]
+            #         pred_face_color_list.append(pred_face_high_color_j.clip(0, 255).astype(np.uint8))
+            #     video_save_path = os.path.join(out_dir, save_name + '_{}_rotate_color.mp4'.format(i))
+            #     write_video(pred_face_color_list, video_save_path, fps=30)
 
             # if len(pred_face_color_list) > 0:
             #     h = hrn_output_vis_batch[i].shape[0]
