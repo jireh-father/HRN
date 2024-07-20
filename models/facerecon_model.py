@@ -822,12 +822,14 @@ class FaceReconModel(BaseModel):
             # results['face_mesh'] = face_mesh
 
             # export mesh with mid and high frequency details
+            print(self.extra_results.keys())
+            color_map = (output['color_map'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
+            color_map = color_map[..., ::-1].clip(0, 255)
             dense_mesh = {
                 'vertices': dense_vertices_batch[i],
                 'faces': dense_faces_batch[i],
-                'colors': texture_map_batch[i],
-                # 'faces_uv': self.facemodel_front.face_buf.cpu().numpy() + 1,
-                # 'faces_normal': self.facemodel_front.face_buf.cpu().numpy() + 1,
+                'UVs': output['UVs'],
+                'texture_map': color_map
             }
             vertices_zero = dense_mesh['vertices'] == 0.0
             keep_inds = np.where((vertices_zero[:, 0] * vertices_zero[:, 1] * vertices_zero[:, 2]) == False)[0]
