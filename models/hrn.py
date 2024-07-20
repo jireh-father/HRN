@@ -235,10 +235,15 @@ class Reconstructor():
         return output
 
     def predict(self, img, visualize=False, out_dir=None, save_name=''):
+        exec_results = {}
         with torch.no_grad():
+            start = time.time()
             output = self.predict_base(img)
+            exec_results['predict_base'] = time.time() - start
 
+            start = time.time()
             output['input_img_for_tex'] = self.get_img_for_texture(output['input_img'])
+            exec_results['get_img_for_texture'] = time.time() - start
 
             hrn_input = {
                 'input_img': output['input_img'],
@@ -253,10 +258,17 @@ class Reconstructor():
                 'de_retouched_albedo_map': output['de_retouched_albedo_map']
             }
 
+            start = time.time()
             self.model.set_input_hrn(hrn_input)
-            self.model.get_edge_points_horizontal()
+            exec_results['set_input_hrn'] = time.time() - start
 
+            start = time.time()
+            self.model.get_edge_points_horizontal()
+            exec_results['get_edge_points_horizontal'] = time.time() - start
+
+            start = time.time()
             self.model.forward_hrn(visualize=visualize)
+            exec_results['forward_hrn'] = time.time() - start
 
             output['deformation_map'] = self.model.deformation_map
             output['displacement_map'] = self.model.displacement_map
@@ -264,10 +276,11 @@ class Reconstructor():
             if out_dir is not None:
                 t1 = time.time()
                 results = self.model.save_results(out_dir, save_name)
-                print('save results', time.time() - t1)
+                exec_results['save_results'] = time.time() - t1
+                # print('save results', time.time() - t1)
 
                 output['hrn_output_vis'] = results['output_vis']
-
+            print(exec_results)
         return output
 
     def predict_multi_view(self, img_list, visualize=False, out_dir=None, save_name='test'):
