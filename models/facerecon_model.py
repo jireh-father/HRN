@@ -822,12 +822,12 @@ class FaceReconModel(BaseModel):
             # results['face_mesh'] = face_mesh
 
             # export mesh with mid and high frequency details
-            # print(self.extra_results.keys())
-            # for k in self.extra_results:
-            #     try:
-            #         print(k, self.extra_results[k].shape)
-            #     except:
-            #         print(k, "except", type(self.extra_results[k]))
+            print(self.extra_results.keys())
+            for k in self.extra_results:
+                try:
+                    print(k, self.extra_results[k].shape)
+                except:
+                    print(k, "except", type(self.extra_results[k]))
             color_map = (self.extra_results['tex_high_color'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
             color_map = color_map[..., ::-1].clip(0, 255)
             dense_mesh = {
