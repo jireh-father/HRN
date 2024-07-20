@@ -834,7 +834,8 @@ class FaceReconModel(BaseModel):
                 'vertices': dense_vertices_batch[i],
                 'faces': dense_faces_batch[i],
                 # 'UVs': output['UVs'],
-                'texture_map': color_map
+                # 'texture_map': color_map,
+                'colors': color_map
             }
             vertices_zero = dense_mesh['vertices'] == 0.0
             keep_inds = np.where((vertices_zero[:, 0] * vertices_zero[:, 1] * vertices_zero[:, 2]) == False)[0]
