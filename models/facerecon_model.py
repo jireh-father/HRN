@@ -828,14 +828,14 @@ class FaceReconModel(BaseModel):
                     print(k, self.extra_results[k].shape)
                 except:
                     print(k, "except", type(self.extra_results[k]))
-            color_map = (self.extra_results['tex_high_color'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
+            color_map = (self.extra_results['pred_face_high_color_list'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
             color_map = color_map[..., ::-1].clip(0, 255)
             dense_mesh = {
                 'vertices': dense_vertices_batch[i],
                 'faces': dense_faces_batch[i],
                 # 'UVs': output['UVs'],
-                # 'texture_map': color_map,
-                'colors': color_map
+                'texture_map': color_map,
+
             }
             vertices_zero = dense_mesh['vertices'] == 0.0
             keep_inds = np.where((vertices_zero[:, 0] * vertices_zero[:, 1] * vertices_zero[:, 2]) == False)[0]
