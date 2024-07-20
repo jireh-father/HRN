@@ -1,4 +1,5 @@
 import cv2
+from util.util_ import read_obj, write_obj2, viz_flow, split_vis, estimate_normals, write_video, crop_mesh
 import numpy as np
 import time
 from PIL import Image
@@ -176,19 +177,19 @@ class Reconstructor():
             tex_map = (output['texture_map'][0] * 255.0).detach().cpu().numpy()[..., ::-1]
             cv2.imwrite(os.path.join(out_dir, img_name + '_texOri.jpg'), tex_map)
 
-            # t2 = time.time()
+            t2 = time.time()
             # # save mesh
             print("output['color_map'].shape", output['color_map'].shape)
-            # color_map = (output['color_map'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
-            # color_map = color_map[..., ::-1].clip(0, 255)
-            # face_mesh = {
-            #     'vertices': output['vertices'][0].detach().cpu().numpy(),
-            #     'faces': output['triangles'] + 1,
-            #     'UVs': output['UVs'],
-            #     'texture_map': color_map
-            # }
-            # write_obj2(os.path.join(out_dir, img_name + '.obj'), mesh=face_mesh)
-            # print('save mesh', time.time() - t2)
+            color_map = (output['color_map'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
+            color_map = color_map[..., ::-1].clip(0, 255)
+            face_mesh = {
+                'vertices': output['vertices'][0].detach().cpu().numpy(),
+                'faces': output['triangles'] + 1,
+                'UVs': output['UVs'],
+                'texture_map': color_map
+            }
+            write_obj2(os.path.join(out_dir, img_name + '.obj'), mesh=face_mesh)
+            print('save mesh', time.time() - t2)
 
             # save coefficients
             coeffs = output['coeffs'].detach().cpu().numpy()  # (1, 257)
@@ -243,7 +244,7 @@ class Reconstructor():
         exec_results = {}
         with torch.no_grad():
             start = time.time()
-            output = self.predict_base(img)
+            output = self.predict_base(img, out_dir=out_dir)
             exec_results['predict_base'] = time.time() - start
 
             start = time.time()
