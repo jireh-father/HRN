@@ -833,7 +833,6 @@ class FaceReconModel(BaseModel):
             dense_mesh = {
                 'vertices': dense_vertices_batch[i],
                 'faces': dense_faces_batch[i],
-                # 'UVs': output['UVs'],
                 'texture_map': color_map,
 
             }

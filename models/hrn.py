@@ -244,7 +244,7 @@ class Reconstructor():
         exec_results = {}
         with torch.no_grad():
             start = time.time()
-            output = self.predict_base(img, out_dir=out_dir)
+            output = self.predict_base(img)#, out_dir=out_dir)
             exec_results['predict_base'] = time.time() - start
 
             start = time.time()
