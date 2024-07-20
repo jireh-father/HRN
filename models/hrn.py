@@ -168,6 +168,7 @@ class Reconstructor():
         color_map = (output['color_map'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
         color_map = color_map[..., ::-1].clip(0, 255)
         print("color_map.shape", color_map.shape)
+        print("output['UVs']", output['UVs'].shape)
         if out_dir is not None:
             t1 = time.time()
 
