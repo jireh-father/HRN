@@ -174,6 +174,7 @@ class Reconstructor():
 
             # t2 = time.time()
             # # save mesh
+            print("output['color_map'].shape", output['color_map'].shape)
             # color_map = (output['color_map'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
             # color_map = color_map[..., ::-1].clip(0, 255)
             # face_mesh = {
