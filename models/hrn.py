@@ -274,7 +274,9 @@ class Reconstructor():
         with torch.no_grad():
             output = {}
             exec_times = {}
+            start = time.time()
             self.model.init_mvhrn_input()
+            exec_times['init_mvhrn_input'] = time.time() - start
             for ind, img in enumerate(img_list):
                 start = time.time()
                 hrn_model_output = self.predict(img, visualize=visualize)
