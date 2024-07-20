@@ -3,7 +3,7 @@ from models.hrn import Reconstructor
 import cv2
 from tqdm import tqdm
 import argparse
-
+import time
 
 def run_hrn(args):
     params = [
@@ -11,8 +11,10 @@ def run_hrn(args):
         '--name', args.name,
         '--epoch', args.epoch,
     ]
-
+    start = time.time()
     reconstructor = Reconstructor(params)
+    load_exec_time = time.time() - start
+    print('load model time:', time.time() - start)
 
     names = sorted([name for name in os.listdir(args.input_root) if '.jpg' in name or '.png' in name or '.jpeg' in name or '.PNG' in name or '.JPG' in name or '.JPEG' in name])
 
@@ -26,6 +28,7 @@ def run_hrn(args):
         output = reconstructor.predict(img, visualize=True, save_name=save_name, out_dir=out_dir)
 
     print('results are saved to:', args.output_root)
+    print("loading time", load_exec_time)
 
 
 def run_mvhrn(args):
