@@ -164,7 +164,7 @@ class Reconstructor():
         self.model.set_input_base(data)  # unpack data from data loader
 
         output = self.model.predict_results_base()  # run inference
-
+        print("output['color_map'].shape", output['color_map'].shape)
         if out_dir is not None:
             t1 = time.time()
 
