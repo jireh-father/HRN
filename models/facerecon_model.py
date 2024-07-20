@@ -803,23 +803,23 @@ class FaceReconModel(BaseModel):
         texture_map_batch = (255.0 * self.pred_color_high).permute(0, 2, 3, 1).detach().cpu().numpy()[..., ::-1]
 
         for i in range(batch_size):
-            cv2.imwrite(os.path.join(out_dir, save_name + '_{}_hrn_output.jpg'.format(i)), hrn_output_vis_batch[i])
+            # cv2.imwrite(os.path.join(out_dir, save_name + '_{}_hrn_output.jpg'.format(i)), hrn_output_vis_batch[i])
             # split_vis(os.path.join(out_dir, save_name + '_{}_hrn_output.jpg'.format(i)))
 
             # export mesh with mid frequency details
-            texture_map = texture_map_batch[i]
-            vertices = vertices_batch[i]
-            normals = estimate_normals(vertices, self.facemodel_front.face_buf.cpu().numpy())
-            face_mesh = {
-                'vertices': vertices,
-                'faces': self.facemodel_front.face_buf.cpu().numpy() + 1,
-                'UVs': self.bfm_UVs.detach().cpu().numpy(),
-                'faces_uv': self.facemodel_front.face_buf.cpu().numpy() + 1,
-                'normals': normals,
-                'texture_map': texture_map,
-            }
-            write_obj2(os.path.join(out_dir, save_name + '_{}_hrn_mid_mesh.obj'.format(i)), face_mesh)
-            results['face_mesh'] = face_mesh
+            # texture_map = texture_map_batch[i]
+            # vertices = vertices_batch[i]
+            # normals = estimate_normals(vertices, self.facemodel_front.face_buf.cpu().numpy())
+            # face_mesh = {
+            #     'vertices': vertices,
+            #     'faces': self.facemodel_front.face_buf.cpu().numpy() + 1,
+            #     'UVs': self.bfm_UVs.detach().cpu().numpy(),
+            #     'faces_uv': self.facemodel_front.face_buf.cpu().numpy() + 1,
+            #     'normals': normals,
+            #     'texture_map': texture_map,
+            # }
+            # write_obj2(os.path.join(out_dir, save_name + '_{}_hrn_mid_mesh.obj'.format(i)), face_mesh)
+            # results['face_mesh'] = face_mesh
 
             # export mesh with mid and high frequency details
             dense_mesh = {
@@ -831,14 +831,14 @@ class FaceReconModel(BaseModel):
             dense_mesh, _ = crop_mesh(dense_mesh, keep_inds)  # remove the redundant vertices and faces
             write_obj2(os.path.join(out_dir, save_name + '_{}_hrn_high_mesh.obj'.format(i)), dense_mesh)
 
-            pred_face_gray_list = []
-            if 'pred_face_high_gray_list' in self.extra_results:
-                for j in range(len(self.extra_results['pred_face_high_gray_list'])):
-                    pred_face_high_gray_j = self.extra_results['pred_face_high_gray_list'][j][i, ...]
-                    pred_face_high_gray_j = 255. * pred_face_high_gray_j.detach().cpu().permute(1, 2, 0).numpy()[..., ::-1]
-                    pred_face_gray_list.append(pred_face_high_gray_j.clip(0, 255).astype(np.uint8))
-                # video_save_path = os.path.join(out_dir, save_name + '_{}_rotate_gray.mp4'.format(i))
-                # write_video(pred_face_gray_list, video_save_path, fps=30)
+            # pred_face_gray_list = []
+            # if 'pred_face_high_gray_list' in self.extra_results:
+            #     for j in range(len(self.extra_results['pred_face_high_gray_list'])):
+            #         pred_face_high_gray_j = self.extra_results['pred_face_high_gray_list'][j][i, ...]
+            #         pred_face_high_gray_j = 255. * pred_face_high_gray_j.detach().cpu().permute(1, 2, 0).numpy()[..., ::-1]
+            #         pred_face_gray_list.append(pred_face_high_gray_j.clip(0, 255).astype(np.uint8))
+            #     # video_save_path = os.path.join(out_dir, save_name + '_{}_rotate_gray.mp4'.format(i))
+            #     # write_video(pred_face_gray_list, video_save_path, fps=30)
 
             pred_face_color_list = []
             if 'pred_face_high_color_list' in self.extra_results:
@@ -846,22 +846,22 @@ class FaceReconModel(BaseModel):
                     pred_face_high_color_j = self.extra_results['pred_face_high_color_list'][j][i, ...]
                     pred_face_high_color_j = 255. * pred_face_high_color_j.detach().cpu().permute(1, 2, 0).numpy()[..., ::-1]
                     pred_face_color_list.append(pred_face_high_color_j.clip(0, 255).astype(np.uint8))
-                # video_save_path = os.path.join(out_dir, save_name + '_{}_rotate_color.mp4'.format(i))
-                # write_video(pred_face_color_list, video_save_path, fps=30)
+                video_save_path = os.path.join(out_dir, save_name + '_{}_rotate_color.mp4'.format(i))
+                write_video(pred_face_color_list, video_save_path, fps=30)
 
-            if len(pred_face_color_list) > 0:
-                h = hrn_output_vis_batch[i].shape[0]
-                static_image = np.concatenate([hrn_output_vis_batch[i][:, :h], hrn_output_vis_batch[i][:, h*2: h*5]], axis=1).clip(0, 255).astype(np.uint8)
-                gif_images = []
-                for j in range(len(pred_face_color_list)):
-                    video_1_i = pred_face_gray_list[j]
-                    video_1_i = cv2.resize(video_1_i, (h, h))
-                    video_2_i = pred_face_color_list[j]
-                    video_2_i = cv2.resize(video_2_i, (h, h))
-
-                    cat_image = np.concatenate([static_image, video_1_i, video_2_i], axis=1)
-                    gif_images.append(cat_image[..., ::-1])
-                imageio.mimsave(os.path.join(out_dir, save_name + '_{}_hrn_output.gif'.format(i)), gif_images, fps=25)
+            # if len(pred_face_color_list) > 0:
+            #     h = hrn_output_vis_batch[i].shape[0]
+            #     static_image = np.concatenate([hrn_output_vis_batch[i][:, :h], hrn_output_vis_batch[i][:, h*2: h*5]], axis=1).clip(0, 255).astype(np.uint8)
+            #     gif_images = []
+            #     for j in range(len(pred_face_color_list)):
+            #         video_1_i = pred_face_gray_list[j]
+            #         video_1_i = cv2.resize(video_1_i, (h, h))
+            #         video_2_i = pred_face_color_list[j]
+            #         video_2_i = cv2.resize(video_2_i, (h, h))
+            #
+            #         cat_image = np.concatenate([static_image, video_1_i, video_2_i], axis=1)
+            #         gif_images.append(cat_image[..., ::-1])
+            #     imageio.mimsave(os.path.join(out_dir, save_name + '_{}_hrn_output.gif'.format(i)), gif_images, fps=25)
 
         return results
 
