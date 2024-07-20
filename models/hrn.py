@@ -13,6 +13,7 @@ import PIL.Image
 from util.util_ import resize_on_long_side, split_vis
 import face_alignment
 import tensorflow as tf
+import time
 
 
 if tf.__version__ >= '2.0':
@@ -274,7 +275,9 @@ class Reconstructor():
             output = {}
             self.model.init_mvhrn_input()
             for ind, img in enumerate(img_list):
+                start = time.time()
                 hrn_model_output = self.predict(img, visualize=visualize)
+                print('predict', time.time() - start)
                 output['view_{}'.format(ind+1)] = hrn_model_output
 
                 mv_hrn_input = {
@@ -294,9 +297,12 @@ class Reconstructor():
 
                 self.model.add_input_mvhrn(mv_hrn_input)
 
+            start = time.time()
             self.model.get_edge_points_horizontal_list()
-
+            print('get edge points', time.time() - start)
+            start = time.time()
             self.model.forward_mvhrn(visualize=visualize)
+            print('forward mvhrn', time.time() - start)
 
             output['canonical_deformation_map'] = self.model.canonical_deformation_map
             output['displacement_map_list'] = self.model.displacement_map_list
