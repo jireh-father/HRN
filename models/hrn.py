@@ -273,11 +273,12 @@ class Reconstructor():
     def predict_multi_view(self, img_list, visualize=False, out_dir=None, save_name='test'):
         with torch.no_grad():
             output = {}
+            exec_times = {}
             self.model.init_mvhrn_input()
             for ind, img in enumerate(img_list):
                 start = time.time()
                 hrn_model_output = self.predict(img, visualize=visualize)
-                print('predict', time.time() - start)
+                exec_times['view_{}'.format(ind+1)] = time.time() - start
                 output['view_{}'.format(ind+1)] = hrn_model_output
 
                 mv_hrn_input = {
@@ -299,10 +300,10 @@ class Reconstructor():
 
             start = time.time()
             self.model.get_edge_points_horizontal_list()
-            print('get edge points', time.time() - start)
+            exec_times['get_edge_points_horizontal'] = time.time() - start
             start = time.time()
             self.model.forward_mvhrn(visualize=visualize)
-            print('forward mvhrn', time.time() - start)
+            exec_times['forward_mvhrn'] = time.time() - start
 
             output['canonical_deformation_map'] = self.model.canonical_deformation_map
             output['displacement_map_list'] = self.model.displacement_map_list
@@ -310,7 +311,8 @@ class Reconstructor():
             if out_dir is not None:
                 t1 = time.time()
                 results = self.model.save_results_mvhrn(out_dir, save_name)
-                print('save results', time.time() - t1)
+                exec_times['save_results'] = time.time() - t1
                 output['hrn_output_vis'] = results
+            print(exec_times)
 
         return output
