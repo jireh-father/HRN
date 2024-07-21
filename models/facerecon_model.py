@@ -853,7 +853,8 @@ class FaceReconModel(BaseModel):
             vertices_zero = dense_mesh['vertices'] == 0.0
             keep_inds = np.where((vertices_zero[:, 0] * vertices_zero[:, 1] * vertices_zero[:, 2]) == False)[0]
             dense_mesh, _ = crop_mesh(dense_mesh, keep_inds)  # remove the redundant vertices and faces
-            print("dense_mesh", dense_mesh['colors'].shape)
+            print("vertices", dense_mesh['vertices'].shape)
+            print("colors", dense_mesh['colors'].shape)
             write_obj2(os.path.join(out_dir, save_name + '_{}_hrn_high_mesh.obj'.format(i)), dense_mesh)
 
             # pred_face_gray_list = []
