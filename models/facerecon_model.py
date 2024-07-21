@@ -838,6 +838,9 @@ class FaceReconModel(BaseModel):
             print(len(self.extra_results['pred_face_high_color_list'][0][0]))
             print(len(self.extra_results['tex_high_color_list'][0][0]))
             print(self.extra_results['pred_face_high_color_list'][0].shape)
+
+            print("color_map", color_map.shape)
+
             dense_mesh = {
                 'vertices': dense_vertices_batch[i],
                 'faces': dense_faces_batch[i],
