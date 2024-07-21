@@ -506,8 +506,8 @@ def write_obj2(save_path, mesh):
         if 'colors' in mesh:
             for i, v in enumerate(mesh['vertices']):
                 wf.write('v {:.6f} {:.6f} {:.6f} {:.6f} {:.6f} {:.6f}\n'.format(
-                    v[0], v[1], v[2], mesh['colors'][i][1],
-                    mesh['colors'][i][2], mesh['colors'][i][0]))
+                    v[0], v[1], v[2], mesh['colors'][i][2],
+                    mesh['colors'][i][0], mesh['colors'][i][1]))
         else:
             for v in mesh['vertices']:
                 wf.write('v {:.6f} {:.6f} {:.6f}\n'.format(v[0], v[1], v[2]))
