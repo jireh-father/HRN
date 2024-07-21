@@ -828,6 +828,10 @@ class FaceReconModel(BaseModel):
                     print(k, self.extra_results[k].shape)
                 except:
                     print(k, len(self.extra_results[k]))
+                    try:
+                        print(len(self.extra_results[k][0]))
+                    except:
+                        pass
             color_map = (self.extra_results['pred_face_high_color'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
             color_map = color_map[..., ::-1].clip(0, 255)
             print("dense_vertices_batch[i]", len(dense_vertices_batch[i]))
