@@ -787,6 +787,7 @@ class FaceReconModel(BaseModel):
         results = self.get_current_visuals()
 
         batch_size = results['output_vis'].shape[0]
+        print("results['output_vis'].shape", results['output_vis'].shape)
 
         hrn_output_vis_batch = (255.0 * results['output_vis']).permute(0, 2, 3, 1).detach().cpu().numpy()[..., ::-1]
 
