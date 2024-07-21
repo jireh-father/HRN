@@ -836,7 +836,7 @@ class FaceReconModel(BaseModel):
                     except:
                         pass
             color_map = (self.extra_results['tex_high_color'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
-            color_map = self.pred_color_high.permute(0, 2, 3, 1).detach().cpu().numpy()[..., ::-1]
+            color_map = self.pred_color_high.permute(0, 2, 3, 1).detach().cpu().numpy()[..., ::-1].clip(0, 1)
             # color_map = color_map[..., ::-1].clip(0, 255)
             # rescale 0~1
             # color_map = color_map / 255.0
