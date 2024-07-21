@@ -52,23 +52,23 @@ class Reconstructor():
         #         # 메모리 증가를 설정하면 텐서플로우는 장치를 초기화해야 합니다.
         #         print(e)
 
-        gpus = tf.config.list_physical_devices('GPU')
+        # gpus = tf.config.list_physical_devices('GPU')
+        #
+        # if gpus:
+        #     try:
+        #         # 첫 번째 GPU에 1GB의 메모리를 할당합니다.
+        #         tf.config.set_logical_device_configuration(
+        #             gpus[0],
+        #             [tf.config.LogicalDeviceConfiguration(memory_limit=256)]
+        #         )
+        #         logical_gpus = tf.config.list_logical_devices('GPU')
+        #         print(f"{len(gpus)} Physical GPUs, {len(logical_gpus)} Logical GPUs")
+        #     except RuntimeError as e:
+        #         print(e)
 
-        if gpus:
-            try:
-                # 첫 번째 GPU에 1GB의 메모리를 할당합니다.
-                tf.config.set_logical_device_configuration(
-                    gpus[0],
-                    [tf.config.LogicalDeviceConfiguration(memory_limit=256)]
-                )
-                logical_gpus = tf.config.list_logical_devices('GPU')
-                print(f"{len(gpus)} Physical GPUs, {len(logical_gpus)} Logical GPUs")
-            except RuntimeError as e:
-                print(e)
-
-        # config = tf.ConfigProto(allow_soft_placement=True)
-        # config.gpu_options.per_process_gpu_memory_fraction = 0.2
-        # config.gpu_options.allow_growth = True
+        config = tf.ConfigProto(allow_soft_placement=True)
+        config.gpu_options.per_process_gpu_memory_fraction = 0.2
+        config.gpu_options.allow_growth = True
         g1 = tf.Graph()
         self.face_sess = tf.Session(graph=g1)#, config=config)
         with self.face_sess.as_default():
