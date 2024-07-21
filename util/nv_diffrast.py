@@ -209,6 +209,7 @@ class MeshRenderer(nn.Module):
         # tex = torch.zeros((1, 128*5//4, 128, 3), dtype=torch.float32)
 
         uv_texture = uv_texture.permute(0, 2, 3, 1).contiguous()
+        print("uv_texture", uv_texture.min(), uv_texture.max())
         img = dr.texture(uv_texture, interp_out, filter_mode='linear')  # , uv_da)
         img = img * torch.clamp(rast_out[..., -1:], 0, 1)  # Mask out background.
 
