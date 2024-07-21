@@ -835,6 +835,8 @@ class FaceReconModel(BaseModel):
             color_map = (self.extra_results['pred_face_high_color'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
             color_map = color_map[..., ::-1].clip(0, 255)
             print("dense_vertices_batch[i]", len(dense_vertices_batch[i]))
+            print(len(self.extra_results['pred_face_high_color_list'][0][0]))
+            print(len(self.extra_results['tex_high_color_list'][0][0]))
             dense_mesh = {
                 'vertices': dense_vertices_batch[i],
                 'faces': dense_faces_batch[i],
