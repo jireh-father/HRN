@@ -827,13 +827,14 @@ class FaceReconModel(BaseModel):
                 try:
                     print(k, self.extra_results[k].shape)
                 except:
-                    print(k, "except", type(self.extra_results[k]))
+                    print(k, len(self.extra_results[k]))
             color_map = (self.extra_results['pred_face_high_color'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
             color_map = color_map[..., ::-1].clip(0, 255)
+            print("dense_vertices_batch[i]", len(dense_vertices_batch[i]))
             dense_mesh = {
                 'vertices': dense_vertices_batch[i],
                 'faces': dense_faces_batch[i],
-                'texture_map': color_map,
+                'colors': color_map,
 
             }
             vertices_zero = dense_mesh['vertices'] == 0.0
