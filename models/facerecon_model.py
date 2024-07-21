@@ -387,7 +387,7 @@ class FaceReconModel(BaseModel):
                                                                        self.facemodel_front.face_buf,
                                                                        self.bfm_UVs.clone(),
                                                                        self.pred_color_high)
-
+        print("self.pred_face_high", self.pred_face_high.shape)
         self.pred_coeffs_dict = self.facemodel_front.split_coeff(self.coeffs)
 
         if visualize:
