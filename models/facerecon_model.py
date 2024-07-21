@@ -837,7 +837,7 @@ class FaceReconModel(BaseModel):
             print("dense_vertices_batch[i]", len(dense_vertices_batch[i]))
             print(len(self.extra_results['pred_face_high_color_list'][0][0]))
             print(len(self.extra_results['tex_high_color_list'][0][0]))
-            print(self.extra_results['pred_face_high_color_list'])
+            print(self.extra_results['pred_face_high_color_list'][0].shape)
             dense_mesh = {
                 'vertices': dense_vertices_batch[i],
                 'faces': dense_faces_batch[i],
