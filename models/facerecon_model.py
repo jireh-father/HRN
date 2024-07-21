@@ -809,33 +809,7 @@ class FaceReconModel(BaseModel):
             # cv2.imwrite(os.path.join(out_dir, save_name + '_{}_hrn_output.jpg'.format(i)), hrn_output_vis_batch[i])
             # split_vis(os.path.join(out_dir, save_name + '_{}_hrn_output.jpg'.format(i)))
 
-            # export mesh with mid frequency details
-            # texture_map = texture_map_batch[i]
-            # vertices = vertices_batch[i]
-            # normals = estimate_normals(vertices, self.facemodel_front.face_buf.cpu().numpy())
-            # face_mesh = {
-            #     'vertices': vertices,
-            #     'faces': self.facemodel_front.face_buf.cpu().numpy() + 1,
-            #     'UVs': self.bfm_UVs.detach().cpu().numpy(),
-            #     'faces_uv': self.facemodel_front.face_buf.cpu().numpy() + 1,
-            #     'normals': normals,
-            #     'texture_map': texture_map,
-            # }
-            # write_obj2(os.path.join(out_dir, save_name + '_{}_hrn_mid_mesh.obj'.format(i)), face_mesh)
-            # results['face_mesh'] = face_mesh
-
-            # export mesh with mid and high frequency details
-            print(self.extra_results.keys())
-            for k in self.extra_results:
-                try:
-                    print(k, self.extra_results[k].shape)
-                except:
-                    print(k, len(self.extra_results[k]))
-                    try:
-                        print(len(self.extra_results[k][0]))
-                    except:
-                        pass
-            color_map = (self.extra_results['tex_high_color'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
+            # color_map = (self.extra_results['tex_high_color'].permute(0, 2, 3, 1)[0] * 255.0).detach().cpu().numpy()
             # color_map = self.pred_color_high.permute(0, 2, 3, 1).detach().cpu().numpy()[..., ::-1].clip(0, 1)
             color_map = self.pred_color_high.permute(0, 2, 3, 1).detach().cpu().numpy().clip(0, 1)
             # color_map = color_map[..., ::-1].clip(0, 255)
@@ -848,6 +822,35 @@ class FaceReconModel(BaseModel):
             print(len(self.extra_results['pred_face_high_color_list'][0][0]))
             print(len(self.extra_results['tex_high_color_list'][0][0]))
             print(self.extra_results['pred_face_high_color_list'][0].shape)
+
+            # export mesh with mid frequency details
+            texture_map = texture_map_batch[i]
+            vertices = vertices_batch[i]
+            normals = estimate_normals(vertices, self.facemodel_front.face_buf.cpu().numpy())
+            face_mesh = {
+                'vertices': vertices,
+                'faces': self.facemodel_front.face_buf.cpu().numpy() + 1,
+                'UVs': self.bfm_UVs.detach().cpu().numpy(),
+                'faces_uv': self.facemodel_front.face_buf.cpu().numpy() + 1,
+                'normals': normals,
+                'texture_map': texture_map,
+                'colors': color_map,
+            }
+            write_obj2(os.path.join(out_dir, save_name + '_{}_hrn_mid_mesh.obj'.format(i)), face_mesh)
+            results['face_mesh'] = face_mesh
+
+            # export mesh with mid and high frequency details
+            print(self.extra_results.keys())
+            for k in self.extra_results:
+                try:
+                    print(k, self.extra_results[k].shape)
+                except:
+                    print(k, len(self.extra_results[k]))
+                    try:
+                        print(len(self.extra_results[k][0]))
+                    except:
+                        pass
+
 
             print("color_map", color_map.shape)
 
