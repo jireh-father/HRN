@@ -382,6 +382,7 @@ class FaceReconModel(BaseModel):
         # render high frequency results
         self.pred_color_high, self.extra_results = self.facemodel_front.compute_for_render_hierarchical_high(self.coeffs, self.displacement_map,
                                                                                          self.de_retouched_albedo_map, face_shape_transformed, face_norm_roted, extra_results=self.extra_results)
+        print("self.pred_vertex", self.pred_vertex.shape)
         _, _, self.pred_face_high = self.renderer.render_uv_texture(self.pred_vertex,
                                                                        self.facemodel_front.face_buf,
                                                                        self.bfm_UVs.clone(),
