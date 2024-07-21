@@ -70,7 +70,7 @@ class Reconstructor():
         config.gpu_options.per_process_gpu_memory_fraction = 0.2
         config.gpu_options.allow_growth = True
         g1 = tf.Graph()
-        self.face_sess = tf.Session(graph=g1)#, config=config)
+        self.face_sess = tf.Session(graph=g1, config=config)
         with self.face_sess.as_default():
             with g1.as_default():
                 with tf.gfile.FastGFile('assets/pretrained_models/segment_face.pb', 'rb') as f:
