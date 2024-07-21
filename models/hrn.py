@@ -39,11 +39,24 @@ class Reconstructor():
 
         self.lm_sess = face_alignment.FaceAlignment(face_alignment.LandmarksType.THREE_D, flip_input=False)
 
-        config = tf.ConfigProto(allow_soft_placement=True)
-        config.gpu_options.per_process_gpu_memory_fraction = 0.2
-        config.gpu_options.allow_growth = True
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+
+        if gpus:
+            try:
+                # 첫 번째 GPU의 메모리 증가를 설정합니다.
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+                logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+                print(f"{len(gpus)} Physical GPUs, {len(logical_gpus)} Logical GPUs")
+            except RuntimeError as e:
+                # 메모리 증가를 설정하면 텐서플로우는 장치를 초기화해야 합니다.
+                print(e)
+
+        # config = tf.ConfigProto(allow_soft_placement=True)
+        # config.gpu_options.per_process_gpu_memory_fraction = 0.2
+        # config.gpu_options.allow_growth = True
         g1 = tf.Graph()
-        self.face_sess = tf.Session(graph=g1, config=config)
+        self.face_sess = tf.Session(graph=g1)#, config=config)
         with self.face_sess.as_default():
             with g1.as_default():
                 with tf.gfile.FastGFile('assets/pretrained_models/segment_face.pb', 'rb') as f:
